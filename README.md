@@ -1,1 +1,2 @@
-# rock-paper-scissorsFirst project with Javascript for Odin project
+# rock-paper-scissors
+First project with Javascript for Odin project
