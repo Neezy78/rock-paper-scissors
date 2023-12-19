@@ -5,8 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Rock paper scissors</title>
     <script src="app.js" defer></script>
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <button class="btn" onclick="play()">Play</button>
+    <!-- main container -->
+    <div class="container">
+      <!-- title -->
+      <h1 id="title">ROCK!PAPER!SCISSORS!</h1>
+      <button class="play-btn" onclick="play()">Play</button>
+      <!-- buttons container -->
+      <div class="btns-container">
+        <h2>ROUND: <span class="round"></span></h2>
+        <div class="rock">
+          <img src="images/rock.svg" alt="rock image" class="image" id="rock" />
+        </div>
+        <div class="paper">
+          <img
+            src="images/paper.svg"
+            alt="paper image"
+            class="image"
+            id="paper"
+          />
+        </div>
+        <div class="scissors">
+          <img
+            src="images/scissors.svg"
+            alt="scissors image"
+            class="image"
+            id="scissors"
+          />
+        </div>
+      </div>
+      <div class="scores">
+        <div class="player-score">
+          <h3>PLAYER</h3>
+          <p class="player-score-text">12</p>
+        </div>
+        <div class="computer-score">
+          <h3>COMPUTER</h3>
+          <p class="computer-score-text">10</p>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

@@ -1,18 +1,36 @@
-let arr = ["Rock", "Paper", "Scissors"];
-const btn = document.querySelector(".btn");
+let arr = ["rock", "paper", "scissors"];
+
+// selectors
+const btn = document.querySelector(".play-btn");
+const btnsContainer = document.querySelector(".btns-container");
+const playerScore = document.querySelector(".player-score-text");
+const computerScore = document.querySelector(".computer-score-text");
+const playingButtons = document.querySelectorAll(".image");
+const round = document.querySelector(".round");
+
+// game features
+let maxRounds = 6;
+let actualRound = 1;
+
 let playerPoints = 0;
 let computerPoints = 0;
-let rounds = 1;
+
+// init values
+playerScore.textContent = 0;
+computerScore.textContent = 0;
 
 function play() {
-  while (rounds <= 5) {
-    console.log(`Round: ${rounds}`);
-    console.log(`Points: Player:${playerPoints} Computer:${computerPoints}`);
-    game();
-    rounds++;
-  }
-  btn.disabled = true;
-  score();
+  console.log(actualRound + " " + maxRounds);
+  btn.style.visibility = "hidden";
+  btnsContainer.classList.add("show-btns");
+  // btn.appendChild(round);
+
+  // make the buttons fire a round with a choice
+  playingButtons.forEach((playBtn) =>
+    playBtn.addEventListener("click", function (e) {
+      playRound(e.target.id);
+    })
+  );
 }
 
 function getComputerChoice() {
@@ -20,76 +38,86 @@ function getComputerChoice() {
   return computerChoice;
 }
 
-function playerSelection() {
-  let input = prompt(
-    'What do you chose ? Enter 1:Rock, 2:Paper" or 3:Scissors.'
-  );
-  let playerChoice = arr[input - 1];
-  if (playerChoice === undefined) {
-    return "Error. You did not enter a valid number.";
-  }
-  return playerChoice;
-}
+function checkScore() {
+  let winner = "";
+  let tie = "No one wins !";
 
-function playRound(playerChoice, computerChoice) {
-  console.log(`Computer choice: ${computerChoice}`);
-  console.log(`Player choice: ${playerChoice}`);
-  if (playerChoice === computerChoice) {
-    return "tie";
-  }
-  switch (playerChoice) {
-    case "rock":
-      if (computerChoice === "paper") {
-        computerPoints++;
-        return "computer wins";
-      }
-      if (computerChoice === "scissors") {
-        playerPoints++;
-        return "player wins";
-      }
-      break;
-    case "paper":
-      if (computerChoice === "scissors") {
-        computerPoints++;
-        return "computer wins";
-      }
-      if (computerChoice === "rock") {
-        playerPoints++;
-        return "player wins";
-      }
-      break;
-    case "scissors":
-      if (computerChoice === "paper") {
-        playerPoints++;
-        return "player wins";
-      }
-      if (computerChoice === "rock") {
-        computerPoints++;
-        return "computer wins";
-      }
-      break;
-  }
-}
-
-function game() {
-  const playerChoice = playerSelection();
-  const computerChoice = getComputerChoice();
-  console.log(
-    playRound(playerChoice.toLowerCase(), computerChoice.toLowerCase())
-  );
-}
-
-function score() {
-  console.log("Who won ?");
-  console.info(
-    "Player score: " + playerPoints,
-    "Computer score: " + computerPoints
-  );
   if (playerPoints === computerPoints) {
-    console.log("ITS A DRAW");
-  } else {
-    console.log(
-      playerPoints > computerPoints ? "Player won." : "Computer won."
-    );
+    return tie;
   }
+  if (playerPoints > computerPoints) {
+    winner = "player";
+  }
+  if (computerPoints > playerPoints) {
+    winner = "computer";
+  }
+  let h1 = `${winner} wins !`;
+  return h1;
+}
+
+function addPoints(playerChoice, computerChoice) {
+  console.log(playerChoice + " " + computerChoice);
+  if (playerChoice === computerChoice) {
+    playerPoints++;
+    computerPoints++;
+    return;
+  }
+  if (playerChoice === "rock") {
+    if (computerChoice === "paper") {
+      computerPoints++;
+    } else {
+      playerPoints++;
+    }
+
+    if (playerChoice === "paper") {
+      if (computerChoice === "scissors") {
+        computerPoints++;
+      } else {
+        playerPoints++;
+      }
+    }
+    if (playerChoice === "scissors") {
+      if (computerChoice === "paper") {
+        playerPoints++;
+      } else {
+        computerPoints++;
+      }
+    }
+  }
+}
+
+function playRound(choice) {
+  // setting the values
+  round.textContent = actualRound;
+
+  // computer choice
+  let computerChoice = getComputerChoice();
+  // check the result and add points
+  addPoints(choice, computerChoice);
+  playerScore.textContent = playerPoints;
+  computerScore.textContent = computerPoints;
+
+  actualRound++;
+  if (actualRound >= maxRounds) {
+    checkScore();
+    gameOver();
+  }
+}
+
+function gameOver() {
+  btn.style.visibility = "hidden";
+  btnsContainer.classList.remove("show-btns");
+
+  btn.style.visibility = "visible";
+  const winner = checkScore();
+
+  const elem = document.createElement("h1");
+  elem.style.textAlign = "center";
+  elem.textContent = winner;
+  btnsContainer.parentNode.parentNode.appendChild(elem);
+  btn.addEventListener("click", restart);
+}
+
+function restart() {
+  location.reload();
 }
